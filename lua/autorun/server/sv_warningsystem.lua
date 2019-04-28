@@ -71,7 +71,6 @@ net.Receive("sv_TargetWarningBegin", function(len, ply)
                 if(searcharr[1] == targetply:SteamID64()) then
                     information = warnings[k]
                     arr = string.Explode("/", information)
-                    print(warnings[k])
                 end
             end
 
@@ -89,7 +88,6 @@ net.Receive("sv_TargetWarningBegin", function(len, ply)
                 if(searcharr[1] == targetply:SteamID64()) then
                     information = warnings[k]
                     arr = string.Explode("/", information)
-                    print(warnings[k])
                 end
             end
 
@@ -109,7 +107,6 @@ net.Receive("sv_TargetWarningBegin", function(len, ply)
                     newwarningnum = tonumber(arr[2]) + 1
                     arr[2] = newwarningnum
                     warnings[k] = arr[1] .. "/" .. arr[2]
-                    print(warnings[k])
                 end
             end
 
