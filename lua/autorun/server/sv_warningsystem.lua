@@ -23,10 +23,7 @@ local function getWarnings(steamid)
     for k, v in pairs(warnings) do
         local _v = string.Explode("/", v)
         if(_v[1] == steamid) then
-            local information = string.Explode("/", v)
-            local steamid = information[1]
-            local warnings = information[2]
-            return tonumber(warnings)
+            return tonumber(_v[2])
         end
     end
 end
