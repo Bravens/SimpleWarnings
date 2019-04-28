@@ -58,40 +58,69 @@ net.Receive("sv_TargetWarningBegin", function(len, ply)
     local targetname = net.ReadString()
     local message = net.ReadString()
     local targetply = getplayerbyname(targetname)
+    local newwarningnum
     if(IsValid(targetply) and targetply:IsPlayer()) then
         -- Search for the target player in warning list  
+        local information = ""
         local warns = getWarnings(targetply:SteamID64())
+        local arr
         if(warns == nil) then -- We create a new player in the warnings list
             table.insert(warnings, targetply:SteamID64() .. "/" .. "1")
+            for k, v in pairs(warnings) do
+                local searcharr = string.Explode("/", v)
+                if(searcharr[1] == targetply:SteamID64()) then
+                    information = warnings[k]
+                    arr = string.Explode("/", information)
+                    print(warnings[k])
+                end
+            end
+
+            net.Start("TargetMenu")
+            net.WriteString(ply:Nick()) -- This is the staff member that is warning the player
+            net.WriteString(arr[2])
+            net.WriteString(message)
+            net.Send(targetply)
+            targetply:Freeze(true) -- So the player can't be moved in any way, which forces him to look at the warning
+            targetply:GodEnable() -- So the player can't get killed while he is getting warned
         elseif(warns == 0) then
             table.insert(warnings, targetply:SteamID64() .. "/" .. "1")
-        end
-        local warns = getWarnings(targetply:SteamID64())
-        local information = ""
-        for k, v in pairs(warnings) do
-            local searcharr = string.Explode("/", v)
-            if(searcharr[1] == targetply:SteamID64()) then
+            for k, v in pairs(warnings) do
+                local searcharr = string.Explode("/", v)
+                if(searcharr[1] == targetply:SteamID64()) then
+                    information = warnings[k]
+                    arr = string.Explode("/", information)
+                    print(warnings[k])
+                end
+            end
+
+            net.Start("TargetMenu")
+            net.WriteString(ply:Nick()) -- This is the staff member that is warning the player
+            net.WriteString(arr[2])
+            net.WriteString(message)
+            net.Send(targetply)
+            targetply:Freeze(true) -- So the player can't be moved in any way, which forces him to look at the warning
+            targetply:GodEnable() -- So the player can't get killed while he is getting warned
+        else
+            for k, v in pairs(warnings) do
                 information = warnings[k]
+                arr = string.Explode("/", information)
+                local _arr = string.Explode("/", v)
+                if(_arr[1] == arr[1]) then
+                    newwarningnum = tonumber(arr[2]) + 1
+                    arr[2] = newwarningnum
+                    warnings[k] = arr[1] .. "/" .. arr[2]
+                    print(warnings[k])
+                end
             end
-        end
-        local arr = string.Explode("/", information)
 
-        for k, v in pairs(warnings) do
-            local searcharr = string.Explode("/", v)
-            if(searcharr[1] == arr[1]) then               
-                local warnnumber = tonumber(arr[2]) + 1
-                local info = arr[1] .. "/" .. warnnumber
-                warnings[k] = info
-            end
+            net.Start("TargetMenu")
+            net.WriteString(ply:Nick()) -- This is the staff member that is warning the player
+            net.WriteString(newwarningnum)
+            net.WriteString(message)
+            net.Send(targetply)
+            targetply:Freeze(true) -- So the player can't be moved in any way, which forces him to look at the warning
+            targetply:GodEnable() -- So the player can't get killed while he is getting warned
         end
-
-        net.Start("TargetMenu")
-        net.WriteString(ply:Nick()) -- This is the staff member that is warning the player
-        net.WriteString(arr[2])
-        net.WriteString(message)
-        net.Send(targetply)
-        targetply:Freeze(true) -- So the player can't be moved in any way, which forces him to look at the warning
-        targetply:GodEnable() -- So the player can't get killed while he is getting warned
     end
 end)
 
