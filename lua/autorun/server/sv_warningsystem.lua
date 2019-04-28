@@ -1,6 +1,6 @@
 local netstrings = {"AdminMenu", "WarningAccepted", "sv_TargetWarningBegin", "TargetMenu", "SendMessage"}
 local warnings = {}
-local staff = {"76561198137629058"}
+local staff = {}
 
 for k, v in pairs(netstrings) do
     util.AddNetworkString(v)
